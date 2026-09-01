@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for
 
+namey = "permanent_name"  # Global variable to store the name across requests
 # The project already uses a capitalized "Static" folder.
 app = Flask(__name__, static_folder='Static')
 
@@ -19,13 +20,15 @@ def login():
     return render_template('name.html')
 
 @app.route('/hello', methods=['GET', 'POST'])
-def hello(name):
+def hello ():
+    namey = None  # Reset namey for each request
     if request.method == 'POST':
-        name = request.form.get('permanent_name', '').strip()
-        if not name:
+        namey = request.form.get('permanent_name', '').strip()
+        if  namey is None or namey == '':
             return render_template('about_me_page.html', error='Please enter a name.')
-    render_template('about_me_page.html', name=name)        
-    return f"Hello, {name}!"
+        
+    return render_template('about_me_page.html', namey = namey)     
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
